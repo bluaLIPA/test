@@ -14,10 +14,10 @@ public class FlightAnalyzer {
         //import org.json.JSONObject;
     public static void main(String[] args) {
         //тут я просто проверял будет ли работать если брать tickets.json не с аргумента а с помощью path
-        String downloadsDirectory = System.getProperty("user.home") + "\\Downloads";
-        String jsonFilePath = downloadsDirectory + "\\tickets.json";
+        //String downloadsDirectory = System.getProperty("user.home") + "\\Downloads";
+        //String jsonFilePath = downloadsDirectory + "\\tickets.json";
 
-        //String jsonFilePath = args[0];
+        String jsonFilePath = args[0];
         try {
             String jsonData = readFile(jsonFilePath);
             JSONObject jsonObject = new JSONObject(jsonData);
