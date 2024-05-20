@@ -3,15 +3,14 @@ import org.json.JSONObject;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.time.Duration;
 import java.time.LocalTime;
 import java.util.*;
 import java.util.stream.Collectors;
 
 public class FlightAnalyzer {
-        //я использовал IntelliJ IDEA, из за этого добавил испорты с помощью jar файла
-        //import org.json.JSONArray;
-        //import org.json.JSONObject;
+    //я использовал IntelliJ IDEA, из за этого добавил испорты с помощью jar файла
+    //import org.json.JSONArray;
+    //import org.json.JSONObject;
     public static void main(String[] args) {
         //тут я просто проверял будет ли работать если брать tickets.json не с аргумента а с помощью path
         //String downloadsDirectory = System.getProperty("user.home") + "\\Downloads";
@@ -60,14 +59,17 @@ public class FlightAnalyzer {
         Map<String, List<JSONObject>> flightsByCarrier = new HashMap<>();
         for (int i = 0; i < tickets.length(); i++) {
             JSONObject ticket = tickets.getJSONObject(i);
-            String carrier = ticket.getString("carrier");
-            flightsByCarrier.computeIfAbsent(carrier, k -> new ArrayList<>()).add(ticket);
+            String origin = ticket.getString("origin");
+            String destination = ticket.getString("destination");
+            if (origin.equals("VVO") && destination.equals("TLV")) {
+                String carrier = ticket.getString("carrier");
+                flightsByCarrier.computeIfAbsent(carrier, k -> new ArrayList<>()).add(ticket);
+            }
         }
         return flightsByCarrier;
     }
 
     private static int calculateFlightDuration(JSONObject flight) {
-        // Ensure departure and arrival times are formatted correctly
         String departureTimeString = flight.getString("departure_time");
         String arrivalTimeString = flight.getString("arrival_time");
 
@@ -78,17 +80,8 @@ public class FlightAnalyzer {
             arrivalTimeString = "0" + arrivalTimeString;
         }
 
-        //System.out.println("Departure Time: " + departureTimeString);
-        //System.out.println("Arrival Time: " + arrivalTimeString);
-
         LocalTime departureTime = LocalTime.parse(departureTimeString);
         LocalTime arrivalTime = LocalTime.parse(arrivalTimeString);
-
-        //System.out.println("Departure Time local : " + departureTime);
-        //System.out.println("Arrival Time local: " + arrivalTime);
-        //Duration total = Duration.between(arrivalTime, departureTime);
-        //long minutes = total.toMinutes();
-        //System.out.println("TOTAL local: " + minutes);
 
         return (int) (departureTime.until(arrivalTime, java.time.temporal.ChronoUnit.MINUTES));
     }
